@@ -86,6 +86,8 @@ abstract class AppModel extends Model
      * @param mixed $object Entidade a ser enriquecida
      * @param array $contains Realcionados a serem carregados
      * @return void 
+     * 
+     * novo envio para o git
      */
 
     protected function relateData(object &$entity, array $contains = []): void {
