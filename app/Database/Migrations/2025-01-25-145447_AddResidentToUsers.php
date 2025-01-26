@@ -8,11 +8,26 @@ class AddResidentToUsers extends Migration
 {
     public function up()
     {
-        //
+        $this->forge->addColumn('users', [
+                    'resident_id' => [
+                        'type'           => 'INT',
+                        'constraint'     => 11, 
+                        'unsigned'       => true,
+                        'null'           => true,
+                        'default'        => null,
+                ],
+        ]);
+
+        $sql = "ALTER TABLE users
+                ADD CONSTRAINT users_resident_id_foreing
+                FOREIGN KEY (resident_id) REFERENCES residents(id)
+                ON DELETE CASCADE ON UPDATE CASCADE";
+
     }
 
     public function down()
     {
-        //
+        $this->forge->dropForeignKey('users', 'users_resident_id_foreing');
+        $this->forge->dropColumn('users', 'resident_id');
     }
 }
