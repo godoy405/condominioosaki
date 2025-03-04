@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Basic;
 
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\Model;
@@ -19,13 +19,7 @@ abstract class AppModel extends Model
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
-    
-    // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
-    protected $cleanValidationRules = true;
-
+  
     // Callbacks
     protected $allowCallbacks = true;
     protected $beforeInsert   = ['escapeData', 'setCode'];    
@@ -65,7 +59,7 @@ abstract class AppModel extends Model
      * 
      */
 
-    protected function getByCode(string $code, array $contains = []): object {
+    public function getByCode(string $code, array $contains = []): object {
         $row = $this->where('code', $code)->first();
 
         if(!$row){
@@ -84,7 +78,7 @@ abstract class AppModel extends Model
      * Relaciona dados extras à entidade, se configurados na classe filha
      * 
      * @param mixed $object Entidade a ser enriquecida
-     * @param array $contains Realcionados a serem carregados
+     * @param array $contains Relacionados a serem carregados
      * @return void 
      * 
      * novo envio para o git

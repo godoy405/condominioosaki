@@ -19,6 +19,7 @@ use Kint\Renderer\Rich\ValuePluginInterface;
  */
 class Kint
 {
+    public static $enabled = false; // Adicione esta linha
     /*
     |--------------------------------------------------------------------------
     | Global Settings
@@ -41,7 +42,7 @@ class Kint
     */
     public string $richTheme = 'aante-light.css';
     public bool $richFolder  = false;
-    public int $richSort     = AbstractRenderer::SORT_FULL;
+    //public int $richSort     = AbstractRenderer::SORT_FULL;
 
     /**
      * @var array<string, class-string<ValuePluginInterface>>|null

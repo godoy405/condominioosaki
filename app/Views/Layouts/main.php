@@ -37,6 +37,12 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+  <style>
+    #min-height-view {
+      min-height: calc(100vh -(64px + 96px));
+    }
+  </style>
+
   <?php echo $this->renderSection('css'); ?>
   
 </head>
@@ -54,7 +60,7 @@
     <div class="collapse navbar-collapse  w-auto  max-height-vh-100 h-100" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link  active" href="../pages/dashboard.html">
+          <a class="nav-link  <?php echo url_is(route_to('home')) ? 'active' : '' ?>" href="<?php echo route_to('home'); ?>">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>shop </title>
@@ -73,8 +79,9 @@
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
+        <?php if(auth()->user()->inGroup('superadmin')): ?>
         <li class="nav-item">
-          <a class="nav-link  " href="../pages/tables.html">
+          <a class="nav-link  <?php echo url_is(route_to('residents')) ? 'active' : '' ?>" href="<?php echo route_to('residents'); ?>">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>office</title>
@@ -90,9 +97,10 @@
                 </g>
               </svg>
             </div>
-            <span class="nav-link-text ms-1">Tables</span>
+            <span class="nav-link-text ms-1">Residentes</span>
           </a>
         </li>
+        <?php endif ?>
         <li class="nav-item">
           <a class="nav-link  " href="../pages/billing.html">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -359,8 +367,12 @@
     <!-- End Navbar -->
     <div class="container-fluid py-4">
 
-    <?php echo $this->renderSection('content'); ?>
+    <div id="#min-height-view">
 
+      <php echo validation_list_errors(); ?></php>
+          
+      <?php echo $this->renderSection('content'); ?>
+    </div>    
       <footer class="footer pt-3  ">
         <div class="container-fluid">
           <div class="row align-items-center justify-content-lg-between">
@@ -393,7 +405,7 @@
           </div>
         </div>
       </footer>
-    </div>
+    </div> 
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
