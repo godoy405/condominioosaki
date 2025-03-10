@@ -1,5 +1,5 @@
 <?php
-
+// cSpell:disable
 namespace App\Models;
 
 use App\Entities\Resident;

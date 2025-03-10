@@ -10,9 +10,9 @@ class HomeController extends BaseController
     public function index(): string
     {
 
-        $model = model(ResidentModel::class);
+        //$model = model(ResidentModel::class);
 
-        $resident = $model->getByCode(code: '12345678', contains:['user']);
+        //$resident = $model->getByCode(code: '12345678', contains:['user']);
 
         //dd($resident);
 

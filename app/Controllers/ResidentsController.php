@@ -11,18 +11,18 @@ use CodeIgniter\HTTP\RedirectResponse;
 class ResidentsController extends BaseController
 {
    
-    private ResidentModel $Model;
+    private ResidentModel $model;
 
     public function __construct()
     {
-        $this->Model = model(ResidentModel::class);
+        $this->model = model(ResidentModel::class);
     }
    
     public function index()
     {      
         $data = [
             'title'     => 'Gerenciar residentes',
-            'residents' => $this->Model->orderBy('created_at', 'DESC')->findAll(),
+            'residents' => $this->model->orderBy('created_at', 'DESC')->findAll(),
         ];
 
         return view('Residents/index', $data);
@@ -34,18 +34,36 @@ class ResidentsController extends BaseController
         $data = [
             'title'    => 'Novo residente',
             'resident' => new Resident(),
-            'route'    => route_to('residents.create')            
+            'route'    => route_to('residents.create'),          
         ];
       
 
         return view('Residents/form', $data);
     }
 
+    public function create(): RedirectResponse 
+    {
+        $rules = (new ResidentValidation)->getRules();
+
+        if ( ! $this->validate($rules) ){
+            return redirect()->back()
+                             ->withInput()
+                             ->with('errors', $this->validator->getErrors());
+        }
+
+        $resident = new Resident($this->validator->getValidated());
+        $id = $this->model->insert($resident);
+        $resident = $this->model->find($id);
+
+        return redirect()->route('residents.show', [$resident->code])->with('success', 'Sucesso !');                          
+                             
+    }
+
     // espera um parâmetro -> tipo string com o nome $code
     public function show(string $code)
     {     
         
-        $resident = $this->Model->getByCode(code: $code);
+        $resident = $this->model->getByCode(code: $code);
         
         $data = [
             'title'    => 'Detalhes do residente',
@@ -60,7 +78,7 @@ class ResidentsController extends BaseController
     public function edit(string $code)
     {     
         
-        $resident = $this->Model->getByCode(code: $code);
+        $resident = $this->model->getByCode(code: $code);
         
         $data = [
             'title'    => 'Editar residente',
@@ -81,5 +99,21 @@ class ResidentsController extends BaseController
                              ->withInput()
                              ->with('errors', $this->validator->getErrors());
         }
+
+        $resident = $this->model->getByCode(code: $code);
+        $resident->fill($this->validator->getValidated());
+
+        $this->model->save($resident);
+
+        return redirect()->route('residents.show', [$resident->code])->with('success', 'Sucesso !');                          
+                             
+    }
+
+    public function destroy(string $code): RedirectResponse {
+        
+        $this->model->where('code', $code)->delete();
+
+        return redirect()->route('residents')->with('success', 'Sucesso !');                          
+                             
     }
 }

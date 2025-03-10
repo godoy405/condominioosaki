@@ -60,7 +60,7 @@
     <div class="collapse navbar-collapse  w-auto  max-height-vh-100 h-100" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link  <?php echo url_is(route_to('home')) ? 'active' : '' ?>" href="<?php echo route_to('home'); ?>">
+          <a class="nav-link  <?php echo url_is(route_to('home')) ? 'active' : ''; ?>" href="<?php echo route_to('home'); ?>">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>shop </title>
@@ -79,9 +79,10 @@
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
+
         <?php if(auth()->user()->inGroup('superadmin')): ?>
         <li class="nav-item">
-          <a class="nav-link  <?php echo url_is(route_to('residents')) ? 'active' : '' ?>" href="<?php echo route_to('residents'); ?>">
+          <a class="nav-link  <?php echo url_is(route_to('residents')) ? 'active' : ''; ?>" href="<?php echo route_to('residents'); ?>">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>office</title>
@@ -101,6 +102,7 @@
           </a>
         </li>
         <?php endif ?>
+        
         <li class="nav-item">
           <a class="nav-link  " href="../pages/billing.html">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -231,6 +233,7 @@
         </li>
       </ul>
     </div>
+    
     <div class="sidenav-footer mx-3 ">
       <div class="card card-background shadow-none card-background-mask-secondary" id="sidenavCard">
         <div class="full-background" style="background-image: url('../assets/img/curved-images/white-curved.jpeg')"></div>
@@ -369,7 +372,7 @@
 
     <div id="#min-height-view">
 
-      <php echo validation_list_errors(); ?></php>
+      <?php echo service('validation')->listErrors(); ?>
           
       <?php echo $this->renderSection('content'); ?>
     </div>    
@@ -492,6 +495,8 @@
   <script src="<?php echo base_url(); ?>assets/js/soft-ui-dashboard.min.js?v=1.0.3"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.6.1/toastify.min.js" integrity="sha512-79j1YQOJuI8mLseq9icSQKT6bLlLtWknKwj1OpJZMdPt2pFBry3vQTt+NZuJw7NSd1pHhZlu0s12Ngqfa371EA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <?php echo $this->include('Layouts/_session_messages'); ?>
 
   <!-- <script>
     Toastify({

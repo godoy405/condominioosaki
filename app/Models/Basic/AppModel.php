@@ -1,5 +1,5 @@
 <?php
-
+// cSpell:disable
 namespace App\Models\Basic;
 
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -63,7 +63,7 @@ abstract class AppModel extends Model
         $row = $this->where('code', $code)->first();
 
         if(!$row){
-            // App\ModelsResidentModel
+            // App\Models\ResidentModel
             $className =static::class;
             throw new PageNotFoundException("Registro com o código {$code} não encontrado na tabela {$this->table} ({$className})");
 
@@ -84,7 +84,7 @@ abstract class AppModel extends Model
      * novo envio para o git
      */
 
-    protected function relateData(object &$entity, array $contains = []): void {
+    protected function relateData(object & $entity, array $contains = []): void {
         // esse método as classes filhas podem sobrescrevê-lo para atender a necessidade específica da classe
     }
          

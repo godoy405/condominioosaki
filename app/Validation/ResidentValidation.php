@@ -8,7 +8,7 @@ class ResidentValidation
 
         return [
             'id' => [
-                'rules' => 'permit_empty|is_natural_zero'
+                'rules' => 'permit_empty|is_natural_no_zero'
             ],
 
             'name' => [
@@ -16,7 +16,7 @@ class ResidentValidation
                     'required',
                     'max_length[100]'
                 ],
-                'error' => [ 
+                'errors' => [ 
                     'required'   => 'O nome é obrigatório',
                     'max_length' => 'O nome deve ter no máximo 100 caractéres'
                 ],

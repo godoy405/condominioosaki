@@ -23,6 +23,8 @@ class AddResidentToUsers extends Migration
                 FOREIGN KEY (resident_id) REFERENCES residents(id)
                 ON DELETE CASCADE ON UPDATE CASCADE";
 
+        $this->db->simpleQuery($sql);
+
     }
 
     public function down()

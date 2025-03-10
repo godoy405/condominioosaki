@@ -1,8 +1,8 @@
 <?php if (isset($errors) && $errors !== []) : ?>
 	<div class="errors" role="alert">
-		<ul>
+		<ul class="list-unstyled">
 		<?php foreach ($errors as $error) : ?>
-			<li><?= esc($error) ?></li>
+			<li class="alert alert-danger text-white"><?= esc($error) ?></li>
 		<?php endforeach ?>
 		</ul>
 	</div>
