@@ -55,8 +55,8 @@
                         </div>
 
                         <div class="mb-3">
-                          <label for="password">Senha                                                                                                           <?php echo $resident?->user !== null ? '(opcional)' : ''; ?></label>
-                          <input type="password" class = "form-control"                                                                                                                                               <?php echo $resident?->user == null ? 'required' : ''; ?>name = "password" id="password" placeholder="Senha de acesso" />
+                          <label for="password">Senha <?php echo $resident?->user !== null ? '(opcional)' : ''; ?></label>                                                                                                          
+                        <input type="password" class = "form-control" <?php echo $resident?->user == null ? 'required' : ''; ?> name= "password" id= "password" placeholder = "Senha de acesso" />                                                                                                                                   
                         </div>
 
                         <div class="mb-3">

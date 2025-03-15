@@ -91,7 +91,8 @@ class ResidentsController extends BaseController
         return view('Residents/form', $data);
     }
 
-    public function update(string $code): RedirectResponse {
+    public function update(string $code): RedirectResponse 
+    {
         $rules = (new ResidentValidation)->getRules(code: $code);
 
         if ( ! $this->validate($rules) ){
@@ -109,7 +110,8 @@ class ResidentsController extends BaseController
                              
     }
 
-    public function destroy(string $code): RedirectResponse {
+    public function destroy(string $code): RedirectResponse 
+    {
         
         $this->model->where('code', $code)->delete();
 

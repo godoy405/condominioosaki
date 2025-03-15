@@ -50,7 +50,7 @@ class ResidentUserController extends BaseController
 
         $userModel = auth()->getProvider();
         $userModel->setAllowedFields(['resident_id', 'username']);
-        $userModel->model->save($user);
+        $userModel->save($user);
 
         $user = $userModel->findById($userModel->getInsertID());
         $userModel->addToDefaultGroup($user);
