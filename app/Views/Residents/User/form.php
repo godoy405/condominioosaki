@@ -30,13 +30,13 @@
                         hidden: ['_method' => 'PUT']
                 ); ?>
 
-                    <?php $isBanned = $resident?->user?->$isBanned(); ?>
+                    <?php $isBanned = $resident?->user?->isBanned(); ?>
 
                     <button type="submit" class="btn ms-2 btn-<?php echo $isBanned ? 'primary' : 'danger'; ?>">
                       <?php echo $isBanned ? 'Liberar' : 'Bloquear'; ?>&nbsp;Acesso
                     </button>
 
-                    <?php echo form_close(); ?>
+                    <?php echo form_close(); ?>                    
 
               <?php endif; ?>
 
@@ -55,8 +55,8 @@
                         </div>
 
                         <div class="mb-3">
-                          <label for="password">Senha <?php echo $resident?->user !== null ? '(opcional)' : ''; ?></label>                                                                                                          
-                        <input type="password" class = "form-control" <?php echo $resident?->user == null ? 'required' : ''; ?> name= "password" id= "password" placeholder = "Senha de acesso" />                                                                                                                                   
+                          <label for="password">Senha                                                      <?php echo $resident?->user !== null ? '(opcional)' : ''; ?></label>
+                        <input type="password" class = "form-control"                                                                      <?php echo $resident?->user == null ? 'required' : ''; ?> name= "password" id= "password" placeholder = "Senha de acesso" />
                         </div>
 
                         <div class="mb-3">
