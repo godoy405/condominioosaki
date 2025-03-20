@@ -19,7 +19,7 @@ class AddResidentToUsers extends Migration
         ]);
 
         $sql = "ALTER TABLE users
-                ADD CONSTRAINT users_resident_id_foreing
+                ADD CONSTRAINT users_resident_id_foreign
                 FOREIGN KEY (resident_id) REFERENCES residents(id)
                 ON DELETE CASCADE ON UPDATE CASCADE";
 
@@ -29,7 +29,7 @@ class AddResidentToUsers extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('users', 'users_resident_id_foreing');
+        $this->forge->dropForeignKey('users', 'users_resident_id_foreign');
         $this->forge->dropColumn('users', 'resident_id');
     }
 }

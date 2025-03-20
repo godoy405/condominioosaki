@@ -15,7 +15,18 @@ class ResidentModel extends AppModel
         'name',
         'apartment',
         'mobile_phone',
+        'code',
     ];
+
+    protected $beforeInsert = ['generateCode'];
+
+    protected function generateCode(array $data): array
+    {
+        if (!isset($data['data']['code'])) {
+            $data['data']['code'] = random_int(10000000, 99999999);
+        }
+        return $data;
+    }
 
     public function getLoggedResident(): Resident{
         $resident = $this->where('id', auth()->user()->residente_id)->first();
@@ -29,7 +40,12 @@ class ResidentModel extends AppModel
     protected function relateData(object &$resident, array $contains = []): void
     {
         if(in_array('user', $contains)) {
-            $resident->user = $resident->user_id === null ? null : auth()->getProvider()->findById($resident->user_id);
+            if ($resident->user_id !== null) {
+                $userModel = auth()->getProvider();
+                $resident->user = $userModel->find($resident->user_id);
+            } else {
+                $resident->user = null;
+            }
         }
     }
 

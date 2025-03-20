@@ -45,18 +45,25 @@ class ResidentsController extends BaseController
     {
         $rules = (new ResidentValidation)->getRules();
 
-        if ( ! $this->validate($rules) ){
+        if (!$this->validate($rules)) {
+            session()->setFlashdata('error', 'Por favor, corrija os erros abaixo.');
             return redirect()->back()
-                             ->withInput()
-                             ->with('errors', $this->validator->getErrors());
+                           ->withInput()
+                           ->with('errors', $this->validator->getErrors());
         }
 
-        $resident = new Resident($this->validator->getValidated());
-        $id = $this->model->insert($resident);
-        $resident = $this->model->find($id);
+        try {
+            $resident = new Resident($this->validator->getValidated());
+            $id = $this->model->insert($resident);
+            $resident = $this->model->find($id);
 
-        return redirect()->route('residents.show', [$resident->code])->with('success', 'Sucesso !');                          
-                             
+            return redirect()->route('residents.show', [$resident->code])
+                           ->with('success', 'Residente cadastrado com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                           ->withInput()
+                           ->with('error', 'Erro ao cadastrar residente. ' . $e->getMessage());
+        }
     }
 
     // espera um parâmetro -> tipo string com o nome $code
@@ -91,22 +98,29 @@ class ResidentsController extends BaseController
         return view('Residents/form', $data);
     }
 
-    public function update(string $code): RedirectResponse {
+    public function update(string $code): RedirectResponse 
+    {
         $rules = (new ResidentValidation)->getRules(code: $code);
 
-        if ( ! $this->validate($rules) ){
+        if (!$this->validate($rules)) {
+            session()->setFlashdata('error', 'Por favor, corrija os erros abaixo.');
             return redirect()->back()
-                             ->withInput()
-                             ->with('errors', $this->validator->getErrors());
+                           ->withInput()
+                           ->with('errors', $this->validator->getErrors());
         }
 
-        $resident = $this->model->getByCode(code: $code);
-        $resident->fill($this->validator->getValidated());
+        try {
+            $resident = $this->model->getByCode(code: $code);
+            $resident->fill($this->validator->getValidated());
+            $this->model->save($resident);
 
-        $this->model->save($resident);
-
-        return redirect()->route('residents.show', [$resident->code])->with('success', 'Sucesso !');                          
-                             
+            return redirect()->route('residents.show', [$resident->code])
+                           ->with('success', 'Residente atualizado com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                           ->withInput()
+                           ->with('error', 'Erro ao atualizar residente. ' . $e->getMessage());
+        }
     }
 
     public function destroy(string $code): RedirectResponse {

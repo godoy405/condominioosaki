@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'required'      => 'O campo {field} é obrigatório',
+    'max_length'    => 'O campo {field} não pode exceder {param} caracteres',
+    'min_length'    => 'O campo {field} deve ter pelo menos {param} caracteres',
+    'is_unique'     => 'O {field} informado já está em uso',
+    'matches'       => 'O campo {field} não corresponde ao campo {param}',
+    'valid_email'   => 'O campo {field} deve conter um endereço de e-mail válido',
+    'numeric'       => 'O campo {field} deve conter apenas números',
+    'greater_than'  => 'O campo {field} deve conter um número maior que {param}',
+    'less_than'     => 'O campo {field} deve conter um número menor que {param}',
+    'alpha_numeric' => 'O campo {field} deve conter apenas letras e números',
+    'alpha'         => 'O campo {field} deve conter apenas letras',
+    'alpha_dash'    => 'O campo {field} deve conter apenas letras, números, sublinhados e traços',
+    'alpha_space'   => 'O campo {field} deve conter apenas letras e espaços',
+    'decimal'       => 'O campo {field} deve conter um número decimal',
+    'integer'       => 'O campo {field} deve conter um número inteiro',
+    'is_natural'    => 'O campo {field} deve conter apenas números positivos',
+    'regex_match'   => 'O campo {field} não está no formato correto',
+    'string'        => 'O campo {field} deve ser uma string',
+    'uploaded'      => 'O arquivo {field} não foi enviado corretamente',
+    'max_size'      => 'O arquivo {field} excede o tamanho máximo permitido',
+    'max_dims'      => 'O arquivo {field} excede as dimensões máximas permitidas',
+    'mime_in'       => 'O arquivo {field} não é do tipo permitido',
+    'ext_in'        => 'O arquivo {field} não tem uma extensão permitida',
+]; 

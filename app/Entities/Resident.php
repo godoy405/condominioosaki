@@ -21,9 +21,7 @@ class Resident extends Entity
      */
 
     public function hasUser(): bool {
-
-        return $this->user_id !== null;
-
+        return $this->user_id !== null && isset($this->user) && $this->user !== null;
     }
     
 }
