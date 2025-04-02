@@ -10,14 +10,14 @@ class HomeController extends BaseController
     public function index(): string
     {
 
-        //$model = model(ResidentModel::class);
+        //$model = model(ReservationModel::class);
 
         //$resident = $model->getByCode(code: '12345678', contains:['user']);
 
         //dd($resident);
 
         $data = [
-            'title' => 'Condomínio'
+            'title' => 'Home'
         ];
 
         return view('Home/index', $data);

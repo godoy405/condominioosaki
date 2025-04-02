@@ -29,7 +29,12 @@ class AddResidentToUsers extends Migration
 
     public function down()
     {
-        $this->forge->dropForeignKey('users', 'users_resident_id_foreign');
         $this->forge->dropColumn('users', 'resident_id');
+        
+        try {
+            $this->forge->dropForeignKey('users', 'users_resident_id_foreign');
+        } catch (\Exception $e) {
+            // Ignora o erro se a chave não existir
+        }
     }
 }

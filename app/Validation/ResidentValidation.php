@@ -3,49 +3,38 @@
 namespace App\Validation;
 
 class ResidentValidation
-{ 
-    public function getRules(?string $code = null): array {
-
+{
+    public function getRules(): array
+    {
         return [
-            'id' => [
-                'rules' => 'permit_empty|is_natural_no_zero'
-            ],
-
             'name' => [
                 'label' => 'Nome',
-                'rules' => [
-                    'required',
-                    'max_length[100]'
-                ],
-                'errors' => [ 
-                    'required'   => 'O nome é obrigatório',
-                    'max_length' => 'O nome deve ter no máximo 100 caracteres'
-                ],
+                'rules' => 'required|min_length[3]|max_length[100]',
+                'errors' => [
+                    'required' => 'O campo Nome é obrigatório',
+                    'min_length' => 'O Nome deve ter no mínimo 3 caracteres',
+                    'max_length' => 'O Nome deve ter no máximo 100 caracteres'
+                ]
             ],
-
             'mobile_phone' => [
                 'label' => 'Telefone',
-                'rules' => [
-                    'required',
-                    "is_unique[residents.mobile_phone, code, {$code}]",
-                ],                
+                'rules' => 'required|min_length[10]|max_length[15]|is_unique[residents.mobile_phone,id,{id}]',
                 'errors' => [
-                    'required'  => 'O telefone é obrigatório',
-                    'is_unique' => 'Este telefone já está cadastrado para outro residente'
-                ],
+                    'required' => 'O campo Telefone é obrigatório',
+                    'min_length' => 'O Telefone deve ter no mínimo 10 caracteres',
+                    'max_length' => 'O Telefone deve ter no máximo 15 caracteres',
+                    'is_unique' => 'Este número de telefone já está cadastrado'
+                ]
             ],
-
             'apartment' => [
                 'label' => 'Apartamento',
-                'rules' => [
-                    'required',                    
-                ],                
+                'rules' => 'required|min_length[1]|max_length[10]',
                 'errors' => [
-                    'required' => 'O apartamento é obrigatório',
-                ],
-            ],
+                    'required' => 'O campo Apartamento é obrigatório',
+                    'min_length' => 'O Apartamento deve ter no mínimo 1 caractere',
+                    'max_length' => 'O Apartamento deve ter no máximo 10 caracteres'
+                ]
+            ]
         ];
-
     }
-    
 }
