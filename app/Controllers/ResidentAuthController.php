@@ -2,48 +2,66 @@
 
 namespace App\Controllers;
 
-use App\Controllers\Basic\AppController;
+use CodeIgniter\Controller;
 use App\Models\ResidentModel;
 
-class ResidentAuthController extends AppController
+class ResidentAuthController extends Controller
 {
-    private $residentModel;
+    protected $residentModel;
+    protected $request;
 
     public function __construct()
     {
         $this->residentModel = new ResidentModel();
+        $this->request = \Config\Services::request();
     }
 
     public function login()
     {
         if ($this->request->getMethod() === 'post') {
-            $mobile_phone = $this->request->getPost('mobile_phone');
+            $email = $this->request->getPost('email');
             $password = $this->request->getPost('password');
 
-            $resident = $this->residentModel->where('mobile_phone', $mobile_phone)->first();
+            // Busca o residente pelo email
+            $resident = $this->residentModel->where('email', $email)
+                                          ->with(['user'])
+                                          ->first();
 
-            if ($resident && password_verify($password, $resident->password)) {
-                $session = session();
-                $session->set([
-                    'resident_id' => $resident->id,
-                    'resident_name' => $resident->name,
-                    'resident_phone' => $resident->mobile_phone,
-                    'resident_logged_in' => true
-                ]);
+            if ($resident && $resident->hasUser()) {
+                // Verifica se o usuário está bloqueado
+                if ($resident->user->isBanned()) {
+                    return redirect()->back()
+                                   ->withInput()
+                                   ->with('error', 'Sua conta está temporariamente bloqueada. Procure o síndico');
+                }
 
-                return redirect()->to('/resident/dashboard')->with('success', 'Bem-vindo(a) ' . $resident->name);
+                // Verifica a senha
+                if (password_verify($password, $resident->password)) {
+                    $session = session();
+                    $session->set([
+                        'resident_id' => $resident->id,
+                        'resident_name' => $resident->name,
+                        'resident_email' => $resident->email,
+                        'resident_logged_in' => true
+                    ]);
+
+                    return redirect()->to('/resident/dashboard')
+                                   ->with('success', 'Bem-vindo(a) ' . $resident->name);
+                }
             }
 
-            return redirect()->back()->with('error', 'Telefone ou senha inválidos');
+            return redirect()->back()
+                           ->withInput()
+                           ->with('error', 'Email ou senha inválidos');
         }
 
-        return view('ResidentAuth/login');
+        return view('Auth/login');
     }
 
     public function logout()
     {
         $session = session();
-        $session->remove(['resident_id', 'resident_name', 'resident_phone', 'resident_logged_in']);
-        return redirect()->to('/resident/login')->with('success', 'Você saiu do sistema');
+        $session->remove(['resident_id', 'resident_name', 'resident_email', 'resident_logged_in']);
+        return redirect()->to('/login')->with('success', 'Você saiu do sistema');
     }
 } 

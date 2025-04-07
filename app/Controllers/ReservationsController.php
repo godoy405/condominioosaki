@@ -19,7 +19,7 @@ class ReservationsController extends BaseController
     public function index()
     {
         $data = [
-            'title' => 'Listagem de reservas',
+            'title' => 'Gerenciar reservas',
             'reservations' => $this->model->all()
         ];
 
@@ -151,4 +151,17 @@ class ReservationsController extends BaseController
                 ->with('error', 'Erro ao rejeitar a reserva. Tente novamente.');
         }
     }
-} 
+
+    public function manage()
+    {
+        $residentId = auth()->user()->id;
+        
+        $data = [
+            'title' => 'Gerenciar Minhas Reservas',
+            'reservations' => $this->model->where('resident_id', $residentId)->findAll(),
+            'areas' => model(AreaModel::class)->orderBy('name', 'ASC')->findAll()
+        ];
+    
+        return view('Resident/reservations_manage', $data);
+    }
+}

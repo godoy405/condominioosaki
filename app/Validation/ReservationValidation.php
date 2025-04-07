@@ -2,16 +2,16 @@
 
 namespace App\Validation;
 
-use App\Enums\Status;
-use CodeIgniter\Validation\Validation;
+use CodeIgniter\Validation\ValidationInterface; // Correct import
+use Config\Services;
 
 class ReservationValidation
 {
-    private Validation $validation;
+    private ValidationInterface $validation;
 
     public function __construct()
     {
-        $this->validation = new Validation();
+        $this->validation = Services::validation(); // Use the service to get the validation instance
     }
 
     public function getRules(?string $code = null): array
@@ -46,7 +46,7 @@ class ReservationValidation
     public function withRequest($request)
     {
         $this->validation->setRules($this->getRules());
-        return $this->validation->withRequest($request);
+        return $this->validation->withRequest($request)->run(); // Ensure run is called here
     }
 
     public function run()
@@ -58,4 +58,4 @@ class ReservationValidation
     {
         return $this->validation->getErrors();
     }
-} 
+}

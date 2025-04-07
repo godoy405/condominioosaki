@@ -16,9 +16,11 @@ class ResidentModel extends AppModel
         'apartment',
         'mobile_phone',
         'code',
+        'can_manage_reservations' // Add this field
     ];
 
     protected $beforeInsert = ['generateCode'];
+    protected $contains = [];
 
     protected function generateCode(array $data): array
     {
@@ -43,10 +45,35 @@ class ResidentModel extends AppModel
             if ($resident->user_id !== null) {
                 $userModel = auth()->getProvider();
                 $resident->user = $userModel->find($resident->user_id);
+                
+                if ($resident->user) {
+                    try {
+                        $resident->user->isBanned = $userModel->isBanned($resident->user->id);
+                    } catch (\Exception $e) {
+                        $resident->user->isBanned = false; // Default to false if there's an error
+                    }
+                }
             } else {
                 $resident->user = null;
             }
         }
     }
 
+    /**
+     * Carrega os relacionamentos especificados
+     * 
+     * @param array $relations
+     * @return self
+     */
+    public function with(array $relations): self
+    {
+        $this->contains = $relations;
+        return $this;
+    }
+
+    public function canManageReservations($residentId): bool
+    {
+        $resident = $this->find($residentId);
+        return $resident && $resident->can_manage_reservations;
+    }
 }

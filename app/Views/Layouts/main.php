@@ -63,7 +63,7 @@
           <a class="nav-link  <?php echo url_is(route_to('home')) ? 'active' : ''; ?>" href="<?php echo route_to('home'); ?>">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <title>shop </title>
+                <title>Dashboard</title>
                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g transform="translate(-1716.000000, -439.000000)" fill="#FFFFFF" fill-rule="nonzero">
                     <g transform="translate(1716.000000, 291.000000)">
@@ -80,12 +80,12 @@
           </a>
         </li>
 
-        <?php if(auth()->user()->inGroup('superadmin')): ?>
+        <?php if(auth()->loggedIn() && auth()->user()->inGroup('superadmin')): ?>
         <li class="nav-item">
           <a class="nav-link  <?php echo url_is(route_to('residents')) ? 'active' : ''; ?>" href="<?php echo route_to('residents'); ?>">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <title>office</title>
+                <title>Residentes</title>
                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g transform="translate(-1869.000000, -293.000000)" fill="#FFFFFF" fill-rule="nonzero">
                     <g transform="translate(1716.000000, 291.000000)">
@@ -101,11 +101,14 @@
             <span class="nav-link-text ms-1">Residentes</span>
           </a>
         </li>
+        <?php endif; ?>
+
+        <?php if(auth()->loggedIn() && auth()->user()->inGroup('superadmin')): ?>
         <li class="nav-item">
           <a class="nav-link  <?php echo url_is(route_to('areas')) ? 'active' : ''; ?>" href="<?php echo route_to('areas'); ?>">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <title>office</title>
+                <title>Áreas</title>
                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g transform="translate(-1869.000000, -293.000000)" fill="#FFFFFF" fill-rule="nonzero">
                     <g transform="translate(1716.000000, 291.000000)">
@@ -121,13 +124,14 @@
             <span class="nav-link-text ms-1">Áreas de lazer</span>
           </a>
         </li>
-        <?php endif ?> 
+        <?php endif; ?>
         
+        <?php if(session()->has('resident_logged_in') || (auth()->loggedIn() && auth()->user()->inGroup('superadmin'))): ?>
         <li class="nav-item">
           <a class="nav-link  <?php echo url_is(route_to('reservations')) ? 'active' : ''; ?>" href="<?php echo route_to('reservations'); ?>">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <title>office</title>
+                <title>Reservas</title>
                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g transform="translate(-1869.000000, -293.000000)" fill="#FFFFFF" fill-rule="nonzero">
                     <g transform="translate(1716.000000, 291.000000)">
@@ -143,8 +147,7 @@
             <span class="nav-link-text ms-1">Gerenciar reservas</span>
           </a>
         </li>
-
-      
+        <?php endif; ?>
       </ul>
     </div>    
     <div class="sidenav-footer mx-3 ">
@@ -185,10 +188,26 @@
           </div>
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
-                <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Sign In</span>
-              </a>
+              <?php if (auth()->loggedIn() || session()->has('resident_logged_in')): ?>
+                <div class="dropdown">
+                  <a href="#" class="nav-link text-body font-weight-bold px-0" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-user me-sm-1"></i>
+                    <span class="d-sm-inline d-none">Minha Conta</span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <?php if (auth()->loggedIn()): ?>
+                      <li><a class="dropdown-item" href="<?= site_url('logout') ?>">Sair</a></li>
+                    <?php else: ?>
+                      <li><a class="dropdown-item" href="<?= site_url('resident/logout') ?>">Sair</a></li>
+                    <?php endif; ?>
+                  </ul>
+                </div>
+              <?php else: ?>
+                <a href="<?= site_url('/') ?>" class="nav-link text-body font-weight-bold px-0">
+                  <i class="fa fa-user me-sm-1"></i>
+                  <span class="d-sm-inline d-none">Entrar</span>
+                </a>
+              <?php endif; ?>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
