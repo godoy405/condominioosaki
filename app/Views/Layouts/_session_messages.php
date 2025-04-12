@@ -30,7 +30,8 @@
         text: '<?php echo session('danger'); ?>',
         close: true,
         gravity: 'bottom',
-        position: 'right',        
+        position: 'right', 
+        backgroundColor: '#dc3454'       
         }).showToast();
   </script> 
 
@@ -42,7 +43,8 @@
         text: '<?php echo session('error'); ?>',
         close: true,
         gravity: 'bottom',
-        position: 'left',        
+        position: 'left',
+        backgroundColor: '#dc3454'           
         }).showToast();
   </script> 
 

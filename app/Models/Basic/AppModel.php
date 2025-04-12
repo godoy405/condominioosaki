@@ -63,8 +63,8 @@ abstract class AppModel extends Model
         $row = $this->where('code', $code)->first();
 
         if(!$row){
-            // App\Models\ResidentModel
-            $className =static::class;
+            // Exemplo: App\Models\ResidentModel
+            $className = static::class;
             throw new PageNotFoundException("Registro com o código {$code} não encontrado na tabela {$this->table} ({$className})");
 
         }
