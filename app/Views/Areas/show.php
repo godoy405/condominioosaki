@@ -17,32 +17,20 @@
           <div class="card mb-4">
             <div class="card-header pb-0">
               <h6><?php echo $title; ?></h6>
-              <a href="<?php echo route_to('residents'); ?>" class="btn btn-outline-secondary">
-                <i class="fas fa-angle-double-left"></i>&nbsp;Listar residentes
+              <a href="<?php echo route_to('areas'); ?>" class="btn btn-outline-secondary">
+                <i class="fas fa-angle-double-left"></i>&nbsp;Listar Áreas
               </a>
-              <a href="<?php echo route_to('residents.new'); ?>" class="btn btn-success">
-                <i class="fas fa-plus"></i>&nbsp;Novo
+              <a href="<?php echo route_to('areas.new'); ?>" class="btn btn-success">
+                <i class="fas fa-plus"></i>&nbsp;Nova área
               </a>
             </div>
             <div class="card-body">
-
-              <?php if(!$resident->hasUser()): ?>
-
-                <div class="alert bg-warning mb-3" role="alert">
-                  <h4 class="alert-heading">Atenção !</h4>
-                  <p>Esse residente ainda não possui um usuário associado.</p>
-                  <a href="<?php echo route_to('residents.user', $resident->code); ?>" class="btn btn-dark btn-sm">
-                    <i class="fas fa-plus"></i>&nbsp;Criar usuário
-                  </a>
-                </div>
-
-              <?php endif; ?>
-              <p><strong>Nome: </strong><?php echo $resident->name; ?></p>
-              <p><strong>Telefone: </strong><?php echo $resident->mobile_phone; ?></p>
-              <p><strong>Apartamento: </strong><?php echo $resident->apartment; ?></p>
-              <p><strong>Criado: </strong><?php echo $resident->created_at->humanize(); ?></p>
-              <p><strong>Atualizado: </strong><?php echo $resident->updated_at->humanize(); ?></p>
-
+             
+              <p><strong>Nome: </strong><?php echo $area->name; ?></p>
+              <p><strong>Código: </strong><?php echo $area->code; ?></p>
+              <p><strong>Criada: </strong><?php echo $area->created_at->humanize(); ?></p>
+              <p><strong>Atualizada: </strong><?php echo $area->updated_at->humanize(); ?></p>
+              <p><strong>Descrição: </strong><br><?php echo $area->description; ?></p>              
               <hr>
 
               <div class="dropdown">
@@ -51,18 +39,12 @@
                 </button>
                 <ul class="dropdown-menu">
                   <li>
-                    <a href="<?php echo route_to('residents.edit', $resident->code); ?>" class="dropdown-item mb-2">
+                    <a href="<?php echo route_to('areas.edit', $area->code); ?>" class="dropdown-item mb-2">
                       Editar
                     </a>
-                  </li>  
-                  <li>
-                    <a href="<?php echo route_to('residents.user', $resident->code); ?>" class="dropdown-item mb-2">
-                      Gerenciar usuário
-                    </a>
-                  </li> 
-                  <li>
+                  </li>                    
                     <?php echo form_open(
-                        action: route_to('residents.destroy', $resident->code),
+                        action: route_to('areas.destroy', $area->code),
                         attributes: ['class' => 'd-inline', 'onsubmit' => 'return confirm("Tem certeza ?");'],
                         hidden: ['_method' => 'DELETE']
                     ); ?>
