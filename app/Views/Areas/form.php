@@ -22,7 +22,7 @@
                 <i class="fas fa-angle-double-left"></i>&nbsp;Listar áeras
               </a>
               <?php else: ?>
-              <a href="<?php echo route_to('areas.show', $resident->code); ?>" class="btn btn-outline-secondary">
+              <a href="<?php echo route_to('areas.show', $area->code); ?>" class="btn btn-outline-secondary">
                 <i class="fas fa-angle-double-left"></i>&nbsp;Detalhes das áreas
               </a>
               <?php endif; ?>

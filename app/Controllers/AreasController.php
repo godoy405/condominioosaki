@@ -71,4 +71,49 @@ class AreasController extends BaseController
 
         return view('Areas/show', $data);
     }
+
+
+    public function edit(string $code)
+    {     
+        $area = $this->model->getByCode(code : $code);
+                      
+        $data = [
+            'title'    => 'Editar área',
+            'area'     => $area,  
+            'route'    => route_to('areas.update', $area->code), 
+            'hidden'   => ['_method' => 'PUT'],        
+
+        ];      
+
+        return view('Areas/form', $data);
+    }
+
+    public function update(string $code): RedirectResponse 
+    {
+        $rules = (new AreaValidation)->getRules(code : $code);
+
+        if ( ! $this->validate($rules) ){
+            return redirect()->back()
+                             ->withInput()
+                             ->with('errors', $this->validator->getErrors());
+        }
+
+        $area = $this->model->getByCode(code : $code);
+
+        $area->fill($this->validator->getValidated());
+        $this->model->save($area);
+       
+
+        return redirect()->route('areas.show', [$area->code])->with('success', 'Sucesso !');                          
+                             
+    }
+
+    public function destroy(string $code): RedirectResponse 
+    {
+     
+        $this->model->where('code', $code)->delete();     
+        return redirect()->route('areas')->with('success', 'Sucesso !');                          
+                             
+    }
+    
 }
