@@ -2,6 +2,8 @@
 // cSpell:disable
 namespace App\Models;
 
+
+use App\Enum\Reservation\Status;
 use App\Entities\Reservation;
 use App\Models\Basic\AppModel;
 use App\Traits\Models\ResidentFilterTrait;
@@ -31,7 +33,13 @@ class ReservationModel extends AppModel
 
     public function setInitialData(array $data): array
     {
-       return $data;
+        $data['data'] ['status']        = Status::PENDING->value;
+        $data['data'] ['reason_status'] = Status::PENDING->label;
+        $data['data'] ['resident_id']   = auth()->user()->resident->id;
+
+        return $data;
+
+       
     }
 
     protected function relateData(object &$area, array $contains = []): void
