@@ -6,6 +6,7 @@ use App\Controllers\HomeController;
 use App\Controllers\AreasController;
 use App\Controllers\ResidentUserController;
 use App\Controllers\ResidentsController;
+use App\Controllers\ReservationsController;
 use CodeIgniter\Router\RouteCollection;
 
 /**
@@ -48,6 +49,20 @@ $routes->group('areas', ['filter' => 'group:superadmin'], static function ($rout
 
     
 });
+
+
+//! Sem filtro Global
+$routes->group('reservations', static function ($routes) {
+    $routes->get('/', [ReservationsController::class, 'index'], ['as' => 'reservations']);
+    $routes->get('new', [ReservationsController::class, 'new'], ['as' => 'reservations.new', 'filter' => 'group:user']);
+    $routes->post('create', [ReservationsController::class, 'create'], ['as' => 'reservations.create']);
+    $routes->get('show/(:segment)', [ReservationsController::class, 'show/$1'], ['as' => 'reservations.show']);    
+    $routes->put('cancel/(:segment)', [ReservationsController::class, 'cancel/$1'], ['as' => 'reservations.cancel', 'filter' => 'group:user']);
+
+    
+});
+
+
 
 
 
