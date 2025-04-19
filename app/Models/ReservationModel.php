@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use Exception;
 use App\Enum\Reservation\Status;
 use App\Entities\Reservation;
 use App\Models\Basic\AppModel;
@@ -34,8 +35,8 @@ class ReservationModel extends AppModel
     public function setInitialData(array $data): array
     {
         $data['data'] ['status']        = Status::PENDING->value;
-        $data['data'] ['reason_status'] = Status::PENDING->label;
-        $data['data'] ['resident_id']   = auth()->user()->resident->id;
+        $data['data'] ['reason_status'] = Status::PENDING->label();
+        $data['data'] ['resident_id']   = auth()->user()->resident->id ?? null;
 
         return $data;
        
@@ -76,7 +77,7 @@ class ReservationModel extends AppModel
     protected function relateData(object &$reservation, array $contains = []): void
     {
         if(in_array('bill', $contains)) {
-           //TODO: buscar a cobrançaassociada à reserva.
+           //TODO: buscar a cobrança associad a à reserva.
 
            //$reservation->bill = $this->billModel->getByCode($reservation->bill_code);
         }
