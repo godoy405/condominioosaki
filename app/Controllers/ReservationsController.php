@@ -2,12 +2,15 @@
 
 namespace App\Controllers;
 
+use App\Services\Notifier\Email;
 use App\Controllers\BaseController;
 use App\Models\ReservationModel;
 use App\Validation\ReservationValidation;
+use App\Helpers\app_helper;
 use CodeIgniter\HTTP\RedirectResponse;
 use App\Entities\Reservation;
 use App\Models\AreaModel;
+
 
 class ReservationsController extends BaseController
 {
@@ -61,7 +64,11 @@ class ReservationsController extends BaseController
         $id = $this->model->insert($reservation);
         $reservation = $this->model->find($id);
 
-        // TODO: notificar síndico que tem nova reserva
+        $syndic = get_syndic();
+        $to = $syndic->email;
+        $subject = 'Nova reserva de área comum';
+        $body = "Nova reserva {$reservation->code} foi criada com sucesso";
+        (new NotifierService())->send($to, $subject, $body);
 
         return redirect()->route('reservations.show', [$reservation->code])->with('success', 'Sucesso !');                          
                              
