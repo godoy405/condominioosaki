@@ -1,9 +1,3 @@
-<?php echo $this->extend('Layouts/main'); ?>
-
-<?php echo $this->section('title'); ?>
-
-<?php echo $title ?>
-
 <?php echo $this->endSection(); ?>
 
 <?php echo $this->section('css'); ?>
@@ -17,60 +11,55 @@
           <div class="card mb-4">
             <div class="card-header pb-0">
               <h6><?php echo $title; ?></h6>
-              <a href="<?php echo route_to('residents'); ?>" class="btn btn-outline-secondary">
-                <i class="fas fa-angle-double-left"></i>&nbsp;Listar residentes
+              <a href="<?php echo route_to('reservations'); ?>" class="btn btn-outline-secondary">
+                <i class="fas fa-angle-double-left"></i>&nbsp;Listar reservas
               </a>
-              <a href="<?php echo route_to('residents.new'); ?>" class="btn btn-success">
-                <i class="fas fa-plus"></i>&nbsp;Novo
-              </a>
+              <?php if(auth()->user()->inGroup('user')): ?>
+                <a href="<?php echo route_to('reservations.new'); ?>" class="btn ms-2 btn-success">
+                  <i class="fas fa-plus"> </i>&nbsp;Nova
+                </a>
+              <?php endif; ?>
+
+              <?php if ($reservation->canBeCanceled()) : ?>
+                    <?php echo form_open(
+                        action: route_to('reservations.cancel', $reservation->code),
+                        attributes: ['class' => 'd-inline', 'onsubmit' => 'return confirm("Tem certeza ?");'],
+                        hidden: ['_method' => 'PUT']
+                    ); ?>
+
+                    <button type="submit" class="btn ms-2 btn-danger">
+                        Cancelar reserva
+                    </button>
+
+                    <?php echo form_close(); ?>
+              <?php endif; ?>
+
             </div>
             <div class="card-body">
 
-              <?php if(!$resident->hasUser()): ?>
+            <div class="mb-4">
+                <h4>Informações da Área</h4>
+                <p><strong>Nome da Área: </strong> <?php echo $reservation?->area?->name; ?></p>
+            </div>
 
-                <div class="alert bg-warning mb-3" role="alert">
-                  <h4 class="alert-heading">Atenção !</h4>
-                  <p>Esse residente ainda não possui um usuário associado.</p>
-                  <a href="<?php echo route_to('residents.user', $resident->code); ?>" class="btn btn-dark btn-sm">
-                    <i class="fas fa-plus"></i>&nbsp;Criar usuário
-                  </a>
-                </div>
+              <p><strong>Data e hora desejada: </strong> <?php echo $reservation->desired_date; ?></p> 
+              <p><strong>status: </strong><?php echo $reservation->status; ?></p>
+              <p><strong>Razão status: </strong><?php echo $reservation->reason_status; ?></p>
+              <p><strong>Dados de cobrança: </strong><br>  
+                        [][]******** Dados daCobrança
+              </p>
+              <p><strong>Residente:</strong> <?php echo $reservation?->residente?->name; ?></p>                    
+              <p><strong>Criada em:</strong> <?php echo $reservation->created_at->humanize(); ?></p>
+              <p><strong>Atualizada em:</strong> <?php echo $reservation->updated_at->humanize(); ?></p>
+              <p><strong>Observações do residente:</strong> <?php echo $reservation->notes ?? 'Nenhuma observação'; ?></p>
+              <?php if(auth()->user()->inGroup('superadmin')): ?>
 
-              <?php endif; ?>
-              <p><strong>Nome: </strong><?php echo $resident->name; ?></p>
-              <p><strong>Telefone: </strong><?php echo $resident->mobile_phone; ?></p>
-              <p><strong>Apartamento: </strong><?php echo $resident->apartment; ?></p>
-              <p><strong>Criado: </strong><?php echo $resident->created_at->humanize(); ?></p>
-              <p><strong>Atualizado: </strong><?php echo $resident->updated_at->humanize(); ?></p>
+                <a href="<?php echo route_to('reservations.bills', $reservation->code); ?>" class="btn btn-primary">
+                    Gerenciar cobrança
+                </a>
 
-              <hr>
-
-              <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Ações
-                </button>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a href="<?php echo route_to('residents.edit', $resident->code); ?>" class="dropdown-item mb-2">
-                      Editar
-                    </a>
-                  </li>  
-                  <li>
-                    <a href="<?php echo route_to('residents.user', $resident->code); ?>" class="dropdown-item mb-2">
-                      Gerenciar usuário
-                    </a>
-                  </li> 
-                  <li>
-                    <?php echo form_open(
-                        action: route_to('residents.destroy', $resident->code),
-                        attributes: ['class' => 'd-inline', 'onsubmit' => 'return confirm("Tem certeza ?");'],
-                        hidden: ['_method' => 'DELETE']
-                    ); ?>
-                    <button type="submit" class="dropdown-item text-danger">Excluir</button>
-                    <?php echo form_close(); ?>
-                  </li>                 
-                </ul>                
-              </div>
+            <?php endif; ?>  
+                          
             </div>
           </div>
         </div>
@@ -85,7 +74,3 @@
 
 
 <?php echo $this->endSection(); ?>
-
-
-
-

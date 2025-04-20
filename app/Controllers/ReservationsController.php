@@ -10,6 +10,7 @@ use App\Helpers\app_helper;
 use CodeIgniter\HTTP\RedirectResponse;
 use App\Entities\Reservation;
 use App\Models\AreaModel;
+use App\Services\Notifier\Email\NotifierService;
 
 
 class ReservationsController extends BaseController
@@ -64,29 +65,37 @@ class ReservationsController extends BaseController
         $id = $this->model->insert($reservation);
         $reservation = $this->model->find($id);
 
-        $syndic = get_syndic();
-        $to = $syndic->email;
-        $subject = 'Nova reserva de área comum';
-        $body = "Nova reserva {$reservation->code} foi criada com sucesso";
-        (new NotifierService())->send($to, $subject, $body);
-
-        return redirect()->route('reservations.show', [$reservation->code])->with('success', 'Sucesso !');                          
-                             
+        try {
+            $syndic = get_syndic();
+            $to = $syndic->email;    
+            $subject = 'Nova reserva';
+            $body = "Nova reserva {$reservation->code} criada com sucesso !";
+            
+            $notifier = new NotifierService();
+            $notifier->send($to, $subject, $body);
+            
+            return redirect()->route('reservations.show', [$reservation->code])
+                            ->with('success', 'Reserva criada com sucesso!');
+        } catch (\Exception $e) {
+            log_message('error', '[Reserva] Erro ao enviar email: ' . $e->getMessage());
+            
+            // Ainda redireciona com sucesso, mas com aviso sobre o email
+            return redirect()->route('reservations.show', [$reservation->code])
+                            ->with('success', 'Reserva criada com sucesso!')
+                            ->with('warning', 'Não foi possível enviar o email de notificação.');
+        }
     }
 
     public function show(string $code)
     {
+        $reservation = $this->model->getByCode(code: $code, contains: ['resident', 'area']);
         
-        $reservation= $this->model->getByCode(code : $code, contains: ['resident', 'bill', 'area']);
-
         $data = [
-            'title'       => 'Criar nova reserva',
-            'reservation' => new Reservation(),
-            'areas'        => model(AreaModel::class)->orderBy('name', 'ASC')->findAll(),
-            'route'       => route_to('reservations.create'),
+            'title'       => "Detalhes da Reserva #{$reservation->code}",
+            'reservation' => $reservation,
         ];
 
-        return view('reservations/form', $data);
+        return view('reservations/show', $data);
     }
 
 
