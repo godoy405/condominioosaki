@@ -66,6 +66,10 @@ class ReservationModel extends AppModel
         // Recupera a reserva pelo código
         $reservation = parent::getByCode(code: $code);
 
+        if ($reservation === null) {
+            throw new \RuntimeException("Reserva com código {$code} não encontrada");
+        }
+
         // Relaciona dados adicionais, se necessário
         $this->relateData($reservation, $contains);
 
@@ -78,21 +82,20 @@ class ReservationModel extends AppModel
     {
         if(in_array('bill', $contains)) {
            //TODO: buscar a cobrança associada à reserva.
-
            //$reservation->bill = $this->billModel->getByCode($reservation->bill_code);
         }
 
         if(in_array('resident', $contains)) {
             $reservation->resident = model(ResidentModel::class)
-                ->where('id', $reservation->resident_id)->first();
+                ->where('id', $reservation->resident_id)
+                ->first();
         }
 
         if(in_array('area', $contains)) {
             $reservation->area = model(AreaModel::class)
-                ->where('id', $reservation->area_id)->first();
+                ->where('id', $reservation->area_id)
+                ->first();
         }
-
-
     }
 
     public function markAs(string $code, Status $status): bool

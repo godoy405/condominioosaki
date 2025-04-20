@@ -58,8 +58,6 @@ $routes->group('reservations', static function ($routes) {
     $routes->post('create', [ReservationsController::class, 'create'], ['as' => 'reservations.create']);
     $routes->get('show/(:segment)', [ReservationsController::class, 'show/$1'], ['as' => 'reservations.show']);    
     $routes->put('cancel/(:segment)', [ReservationsController::class, 'cancel/$1'], ['as' => 'reservations.cancel', 'filter' => 'group:user']);
-
-    
 });
 
 

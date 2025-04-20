@@ -55,7 +55,7 @@ class ReservationsController extends BaseController
     {
         $rules = (new ReservationValidation)->getRules();
 
-        if ( ! $this->validate($rules) ){
+        if (!$this->validate($rules)) {
             return redirect()->back()
                              ->withInput()
                              ->with('errors', $this->validator->getErrors());
@@ -74,28 +74,43 @@ class ReservationsController extends BaseController
             $notifier = new NotifierService();
             $notifier->send($to, $subject, $body);
             
+            // Adicionando log para debug
+            log_message('debug', 'Redirecionando para show com código: ' . $reservation->code);
+            
             return redirect()->route('reservations.show', [$reservation->code])
-                            ->with('success', 'Reserva criada com sucesso!');
+                             ->with('success', 'Reserva criada com sucesso!');
         } catch (\Exception $e) {
             log_message('error', '[Reserva] Erro ao enviar email: ' . $e->getMessage());
             
-            // Ainda redireciona com sucesso, mas com aviso sobre o email
             return redirect()->route('reservations.show', [$reservation->code])
-                            ->with('success', 'Reserva criada com sucesso!')
-                            ->with('warning', 'Não foi possível enviar o email de notificação.');
+                             ->with('success', 'Reserva criada com sucesso!')
+                             ->with('warning', 'Não foi possível enviar o email de notificação.');
         }
     }
 
     public function show(string $code)
     {
-        $reservation = $this->model->getByCode(code: $code, contains: ['resident', 'area']);
-        
-        $data = [
-            'title'       => "Detalhes da Reserva #{$reservation->code}",
-            'reservation' => $reservation,
-        ];
+        try {
+            $reservation = $this->model->getByCode(code: $code, contains: ['resident', 'area']);
+            
+            if ($reservation === null) {
+                throw new \RuntimeException('Reserva não encontrada');
+            }
 
-        return view('reservations/show', $data);
+            // Log temporário para debug
+            log_message('debug', 'Dados da reserva: ' . json_encode($reservation));
+
+            $data = [
+                'title'       => "Detalhes da Reserva #{$reservation->code}",
+                'reservation' => $reservation,
+            ];
+
+            return view('reservations/show', $data);
+        } catch (\Exception $e) {
+            log_message('error', '[Erro ao carregar reserva] ' . $e->getMessage());
+            return redirect()->back()
+                            ->with('error', 'Erro ao carregar os detalhes da reserva: ' . $e->getMessage());
+        }
     }
 
 
