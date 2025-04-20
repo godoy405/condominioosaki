@@ -100,15 +100,28 @@ class ReservationModel extends AppModel
 
     public function markAs(string $code, Status $status): bool
     {
+        try {
+            $data = [
+                'status' => $status->value,
+                'reason_status' => $status->label()
+            ];
 
-        $data = [
-            'status' => $status->value, 
-            'reason_status' => $status->label()
-        ];
+            $result = $this->set($data)
+                          ->where('code', $code)
+                          ->update();
 
-        return $this->set($data)
-            ->where('code', $code)
-            ->update();
+            // Adicionando log para debug
+            log_message('debug', 'Atualizando status: ' . json_encode([
+                'code' => $code,
+                'new_status' => $status->value,
+                'result' => $result
+            ]));
+
+            return (bool) $result;
+        } catch (\Exception $e) {
+            log_message('error', '[Reserva] Erro ao atualizar status: ' . $e->getMessage());
+            return false;
+        }
     }
 
 }

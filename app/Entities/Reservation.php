@@ -20,7 +20,12 @@ class Reservation extends Entity
  
     public function canBeCanceled(): bool
     {
-        return $this->status === Status::PENDING;
+        // Adicionando log para debug
+        log_message('debug', 'Status atual: ' . $this->status);
+        log_message('debug', 'Comparação: ' . ($this->status === Status::PENDING->value));
+        
+        // Comparando com o valor do enum
+        return $this->status === Status::PENDING->value;
     }
 
     public function status(): string

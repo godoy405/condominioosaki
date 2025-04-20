@@ -34,13 +34,15 @@
                             <i class="fas fa-plus"></i>&nbsp;Nova Reserva
                         </a>
 
-                        <?php echo form_open(
-                            route_to('reservations.cancel', $reservation->code),
-                            ['class' => 'd-inline', 'onsubmit' => 'return confirm("Tem certeza que deseja cancelar esta reserva?");'],
-                            ['_method' => 'PUT']
-                        ); ?>
-                            <button type="submit" class="btn btn-danger">Cancelar</button>
-                        <?php echo form_close(); ?>
+                        <?php if ($reservation->canBeCanceled()): ?>
+                            <?php echo form_open(
+                                route_to('reservations.cancel', $reservation->code),
+                                ['class' => 'd-inline', 'onsubmit' => 'return confirm("Tem certeza que deseja cancelar esta reserva?");'],
+                                ['_method' => 'PUT']
+                            ); ?>
+                                <button type="submit" class="btn btn-danger">Cancelar</button>
+                            <?php echo form_close(); ?>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>

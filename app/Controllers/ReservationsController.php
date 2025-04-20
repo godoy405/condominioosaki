@@ -11,6 +11,7 @@ use CodeIgniter\HTTP\RedirectResponse;
 use App\Entities\Reservation;
 use App\Models\AreaModel;
 use App\Services\Notifier\Email\NotifierService;
+use App\Enum\Reservation\Status;
 
 
 class ReservationsController extends BaseController
@@ -110,6 +111,47 @@ class ReservationsController extends BaseController
             log_message('error', '[Erro ao carregar reserva] ' . $e->getMessage());
             return redirect()->back()
                             ->with('error', 'Erro ao carregar os detalhes da reserva: ' . $e->getMessage());
+        }
+    }
+
+    public function cancel(string $code): RedirectResponse 
+    {
+        try {
+            $reservation = $this->model->getByCode($code);
+            
+            // Adicionando logs para debug
+            log_message('debug', 'Tentando cancelar reserva: ' . $code);
+            log_message('debug', 'Status atual: ' . $reservation->status);
+            
+            if (!$reservation->canBeCanceled()) {
+                log_message('debug', 'Não foi possível cancelar - Status não permite');
+                return redirect()->back()
+                                ->with('error', 'Não é possível cancelar essa reserva. Status atual: ' . $reservation->status());
+            }
+            
+            if ($this->model->markAs(code: $reservation->code, status: Status::CANCELED)) {
+                $syndic = get_syndic();
+                $to = $syndic->email;
+                $subject = 'Reserva cancelada';
+                $body = "A reserva {$reservation->code} foi cancelada com sucesso!";
+                
+                try {
+                    (new NotifierService())->send($to, $subject, $body);
+                } catch (\Exception $e) {
+                    log_message('error', '[Reserva] Erro ao enviar email: ' . $e->getMessage());
+                }
+
+                return redirect()->route('reservations.show', [$reservation->code])
+                                ->with('success', 'Reserva cancelada com sucesso!');
+            }
+
+            return redirect()->back()
+                            ->with('error', 'Não foi possível cancelar a reserva. Tente novamente.');
+            
+        } catch (\Exception $e) {
+            log_message('error', '[Reserva] Erro ao cancelar: ' . $e->getMessage());
+            return redirect()->back()
+                            ->with('error', 'Erro ao processar o cancelamento: ' . $e->getMessage());
         }
     }
 
