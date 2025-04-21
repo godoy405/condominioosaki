@@ -12,3 +12,14 @@ if(!function_exists('get_syndic')) {
         ->first() ?? throw new Exception("Não foi encontrado o síndico da aplicação", EXIT_ERROR);
     }
 }
+
+
+if(!function_exists('show_price')) {
+
+    function show_price(int|float $price): string
+    {
+        return number_to_currency(num: $price, currency: 'BRL', fraction: 2);
+    }
+}
+
+

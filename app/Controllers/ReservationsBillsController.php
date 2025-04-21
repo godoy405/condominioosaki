@@ -10,11 +10,12 @@ use App\Helpers\app_helper;
 use CodeIgniter\HTTP\RedirectResponse;
 use App\Entities\Reservation;
 use App\Models\AreaModel;
+use App\Models\BillModel;
 use App\Services\Notifier\Email\NotifierService;
 use App\Enum\Reservation\Status;
 
 
-class ReservationsBillsController extends BaseController
+class ReservationsController extends BaseController
 {
 
     private ReservationModel $model;
@@ -28,30 +29,23 @@ class ReservationsBillsController extends BaseController
      */
 
 
-    public function index(string $code)
+    public function index()
     {
-        
+        $reservation = $this->model->getByCode(code: $code, contains: ['resident', 'bill', 'area']);
+
+      $route = route_to($reservation->bill === null ? 'reservations.bill.create' : 'reservations.bill.update', $reservation->code);
+
         $data = [
-            'title'        => 'Gerenciar reservas',
-            'reservations' => $this->model->all(),
+            'title'    => $reservation->bill === null ? 'Criar cobrança' : 'Editar cobrança',
+            'reservation' => $reservation,
+            'route'    => $route,
+            'hidden'   => $reservation->bill !== null ? ['_method' => 'PUT'] : [],
         ];
 
-        return view('reservations/index', $data);
+        return view('Reservations/Bill/form', $data);
     }
 
-    public function new()
-    {
-        
-        $data = [
-            'title'       => 'Criar nova reserva',
-            'reservation' => new Reservation(),
-            'areas'        => model(AreaModel::class)->orderBy('name', 'ASC')->findAll(),
-            'route'       => route_to('reservations.create'),
-        ];
-
-        return view('reservations/form', $data);
-    }
-
+   
     public function create(): RedirectResponse 
     {
         $rules = (new ReservationValidation)->getRules();

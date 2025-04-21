@@ -44,7 +44,7 @@
   </style>
 
   <?php echo $this->renderSection('css'); ?>
-  
+
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -60,7 +60,7 @@
     <div class="collapse navbar-collapse  w-auto  max-height-vh-100 h-100" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link  <?php echo url_is(route_to('home')) ? 'active' : ''; ?>" href="<?php echo route_to('home'); ?>">
+          <a class="nav-link                                                          <?php echo url_is(route_to('home')) ? 'active' : ''; ?>" href="<?php echo route_to('home'); ?>">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>shop </title>
@@ -80,9 +80,9 @@
           </a>
         </li>
 
-        <?php if(auth()->user()->inGroup('superadmin')): ?>
+        <?php if (auth()->user()->inGroup('superadmin')): ?>
         <li class="nav-item">
-          <a class="nav-link  <?php echo url_is(route_to('residents')) ? 'active' : ''; ?>" href="<?php echo route_to('residents'); ?>">
+          <a class="nav-link                                                          <?php echo url_is(route_to('residents')) ? 'active' : ''; ?>" href="<?php echo route_to('residents'); ?>">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>office</title>
@@ -103,7 +103,7 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link  <?php echo url_is(route_to('areas')) ? 'active' : ''; ?>" href="<?php echo route_to('areas'); ?>">
+          <a class="nav-link                                                          <?php echo url_is(route_to('areas')) ? 'active' : ''; ?>" href="<?php echo route_to('areas'); ?>">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>office</title>
@@ -122,10 +122,10 @@
             <span class="nav-link-text ms-1">Gerenciar Áreas de Lazer</span>
           </a>
         </li>
-        <?php endif ?> 
-        
+        <?php endif?>
+
         <li class="nav-item">
-          <a class="nav-link  <?php echo url_is(route_to('reservations')) ? 'active' : ''; ?>" href="<?php echo route_to('reservations'); ?>">
+          <a class="nav-link                                                          <?php echo url_is(route_to('reservations')) ? 'active' : ''; ?>" href="<?php echo route_to('reservations'); ?>">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>office</title>
@@ -144,9 +144,9 @@
             <span class="nav-link-text ms-1">Gerenciar reservas</span>
           </a>
         </li>
-  
+
       </ul>
-    </div>    
+    </div>
     <div class="sidenav-footer mx-3 ">
       <div class="card card-background shadow-none card-background-mask-secondary" id="sidenavCard">
         <div class="full-background" style="background-image: url('../assets/img/curved-images/white-curved.jpeg')"></div>
@@ -179,9 +179,9 @@
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
             <div class="input-group">
               <span class="input-group-text text-body">
-                  <?php echo auth()->user()->username; ?> / <?php echo auth()->user()->inGroup('user') ? 'Residente' : 'Síndico'; ?>
+                  <?php echo auth()->user()->username; ?> /<?php echo auth()->user()->inGroup('user') ? 'Residente' : 'Síndico'; ?>
               </span>
-              
+
             </div>
           </div>
           <ul class="navbar-nav  justify-content-end">
@@ -288,9 +288,9 @@
     <div id="#min-height-view">
 
       <?php echo service('validation')->listErrors(); ?>
-          
+
       <?php echo $this->renderSection('content'); ?>
-    </div>    
+    </div>
       <footer class="footer pt-3  ">
         <div class="container-fluid">
           <div class="row align-items-center justify-content-lg-between">
@@ -323,7 +323,7 @@
           </div>
         </div>
       </footer>
-    </div> 
+    </div>
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
@@ -356,7 +356,7 @@
             <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
             <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
             <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
-            
+
           </div>
         </a>
         <!-- Sidenav Type -->
@@ -396,7 +396,7 @@
   <script src="<?php echo base_url(); ?>assets/js/core/popper.min.js"></script>
   <script src="<?php echo base_url(); ?>assets/js/core/bootstrap.min.js"></script>
   <script src="<?php echo base_url(); ?>assets/js/plugins/perfect-scrollbar.min.js"></script>
-  <script src="<?php echo base_url(); ?>assets/js/plugins/smooth-scrollbar.min.js"></script>  
+  <script src="<?php echo base_url(); ?>assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -405,13 +405,61 @@
       }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-  </script>  
+  </script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="<?php echo base_url(); ?>assets/js/soft-ui-dashboard.min.js?v=1.0.3"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.6.1/toastify.min.js" integrity="sha512-79j1YQOJuI8mLseq9icSQKT6bLlLtWknKwj1OpJZMdPt2pFBry3vQTt+NZuJw7NSd1pHhZlu0s12Ngqfa371EA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <?php echo $this->include('Layouts/_session_messages'); ?>
+
+
+  <script>
+        // Função para formatar o valor como moeda
+        function formatCurrency(value) {
+            // Verifica se o valor é nulo ou indefinido
+            if (value == null) return 'R$ 0,00';
+
+            // Verifica se o valor é do tipo número e converte para string se necessário
+            if (typeof value === 'number') {
+                value = value.toString();
+            }
+
+            // Remove todos os caracteres não numéricos
+            value = value.replace(/\D/g, '');
+            // Divide o valor por 100 e fixa em duas casas decimais
+            value = (value / 100).toFixed(2) + '';
+            // Substitui o ponto decimal por uma vírgula
+            value = value.replace('.', ',');
+            // Adiciona pontos como separadores de milhares
+            value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+            // Retorna o valor formatado com o símbolo R$
+            return `R$ ${value}`;
+        }
+
+        // Função para aplicar a formatação nos inputs
+        function applyCurrencyFormat() {
+            // Seleciona todos os inputs com a classe price_formatted
+            const inputs = document.querySelectorAll('.price_formatted');
+
+            inputs.forEach(input => {
+                // Aplica a formatação quando a página carrega
+                input.value = formatCurrency(input.value);
+
+                // Aplica a formatação enquanto o usuário digita
+                input.addEventListener('input', () => {
+                    // Formata o valor atual do input
+                    input.value = formatCurrency(input.value);
+
+                    // Move o cursor para o final do input
+                    input.setSelectionRange(input.value.length, input.value.length);
+                });
+            });
+        }
+
+        // Adiciona o evento de carregamento da página para aplicar a formatação
+        window.addEventListener('load', applyCurrencyFormat);
+    </script>
 
   <!-- <script>
     Toastify({

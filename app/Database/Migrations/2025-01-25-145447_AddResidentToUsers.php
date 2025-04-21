@@ -9,13 +9,13 @@ class AddResidentToUsers extends Migration
     public function up()
     {
         $this->forge->addColumn('users', [
-                    'resident_id' => [
-                        'type'           => 'INT',
-                        'constraint'     => 11, 
-                        'unsigned'       => true,
-                        'null'           => true,
-                        'default'        => null,
-                ],
+            'resident_id' => [
+                'type'           => 'INT',
+                'constraint'     => 11, 
+                'unsigned'       => true,
+                'null'           => true,
+                'default'        => null,
+            ],
         ]);
 
         $sql = "ALTER TABLE users
@@ -24,7 +24,6 @@ class AddResidentToUsers extends Migration
                 ON DELETE CASCADE ON UPDATE CASCADE";
 
         $this->db->simpleQuery($sql);
-
     }
 
     public function down()

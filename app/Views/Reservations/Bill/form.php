@@ -41,6 +41,14 @@
                     hidden: $hidden ?? []
                 ); ?>
 
+                <div>
+                    <p>Residente: <?php echo $reservation?->resident?->name; ?></p>
+                    <p>Área: <?php echo $reservation?->area?->name; ?></p>
+                    <p>Data de início: <?php echo $reservation?->start_date; ?></p>
+                    <p>Data de término: <?php echo $reservation?->end_date; ?></p>
+                    <p>Valor: <?php echo $reservation?->bill?->value; ?></p>                    
+                </div>
+
                 <div class="mb-3">
                     <label for="email">E-mail de acesso</label>
                     <input type="email" class="form-control" name="email" value="<?php echo old('email', $resident?->user?->email); ?>" id="email" placeholder="E-mail de acesso" />
