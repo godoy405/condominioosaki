@@ -14,7 +14,7 @@ use App\Services\Notifier\Email\NotifierService;
 use App\Enum\Reservation\Status;
 
 
-class ReservationsBillsController extends BaseController
+class ReservationsController extends BaseController
 {
 
     private ReservationModel $model;
@@ -28,7 +28,7 @@ class ReservationsBillsController extends BaseController
      */
 
 
-    public function index(string $code)
+    public function index()
     {
         
         $data = [

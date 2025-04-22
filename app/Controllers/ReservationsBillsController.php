@@ -15,13 +15,15 @@ use App\Services\Notifier\Email\NotifierService;
 use App\Enum\Reservation\Status;
 
 
-class ReservationsController extends BaseController
+class ReservationsBillsController extends BaseController
 {
 
+  
     private ReservationModel $model;
 
     public function __construct()
     {
+        
         $this->model = model(ReservationModel::class);
     }
     /**
@@ -29,17 +31,17 @@ class ReservationsController extends BaseController
      */
 
 
-    public function index()
+    public function index(string $code)
     {
         $reservation = $this->model->getByCode(code: $code, contains: ['resident', 'bill', 'area']);
 
-      $route = route_to($reservation->bill === null ? 'reservations.bill.create' : 'reservations.bill.update', $reservation->code);
+        $route = route_to($reservation->bill === null ? 'reservations.bills.create' : 'reservations.bills.update', $reservation->code);
 
         $data = [
-            'title'    => $reservation->bill === null ? 'Criar cobrança' : 'Editar cobrança',
-            'reservation' => $reservation,
-            'route'    => $route,
-            'hidden'   => $reservation->bill !== null ? ['_method' => 'PUT'] : [],
+            'title'           => $reservation->bill === null ? 'Criar cobrança' : 'Editar cobrança',
+            'reservation'     => $reservation,
+            'route'           => $route,
+            'hidden'          => $reservation->bill !== null ? ['_method' => 'PUT'] : [],
         ];
 
         return view('Reservations/Bill/form', $data);

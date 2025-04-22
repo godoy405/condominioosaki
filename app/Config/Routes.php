@@ -7,6 +7,7 @@ use App\Controllers\AreasController;
 use App\Controllers\ResidentUserController;
 use App\Controllers\ResidentsController;
 use App\Controllers\ReservationsController;
+use App\Controllers\ReservationsBillsController;
 use CodeIgniter\Router\RouteCollection;
 
 /**
@@ -58,7 +59,18 @@ $routes->group('reservations', static function ($routes) {
     $routes->post('create', [ReservationsController::class, 'create'], ['as' => 'reservations.create']);
     $routes->get('show/(:segment)', [ReservationsController::class, 'show/$1'], ['as' => 'reservations.show']);    
     $routes->put('cancel/(:segment)', [ReservationsController::class, 'cancel/$1'], ['as' => 'reservations.cancel', 'filter' => 'group:user']);
+
+
+    // rotas das cobranças das reservas
+    $routes->group('bills', ['filter' => 'group:superadmin'], static function ($routes) {
+        $routes->get('(:segment)', [ReservationsBillsController::class, 'index'], ['as' => 'reservations.bills']);        
+        $routes->post('create', [ReservationsBillsController::class, 'create'], ['as' => 'reservations.bills.create']);            
+        $routes->put('update/(:segment)', [ReservationsBillsController::class, 'update/$1'], ['as' => 'reservations.bills.update']);
+    });
+
 });
+
+
 
 
 
