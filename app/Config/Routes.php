@@ -54,20 +54,22 @@ $routes->group('areas', ['filter' => 'group:superadmin'], static function ($rout
 
 //! Sem filtro Global
 $routes->group('reservations', static function ($routes) {
+    // Rotas comuns
     $routes->get('/', [ReservationsController::class, 'index'], ['as' => 'reservations']);
-    $routes->get('new', [ReservationsController::class, 'new'], ['as' => 'reservations.new', 'filter' => 'group:user']);
+    $routes->get('new', [ReservationsController::class, 'new'], ['as' => 'reservations.new']);
     $routes->post('create', [ReservationsController::class, 'create'], ['as' => 'reservations.create']);
-    $routes->get('show/(:segment)', [ReservationsController::class, 'show/$1'], ['as' => 'reservations.show']);    
-    $routes->put('cancel/(:segment)', [ReservationsController::class, 'cancel/$1'], ['as' => 'reservations.cancel', 'filter' => 'group:user']);
-
-
-    // rotas das cobranças das reservas
+    
+    // Rota para ver detalhes (usuários normais)
+    $routes->get('show/(:segment)', [ReservationsController::class, 'show/$1'], ['as' => 'reservations.show']);
+    
+    // Rotas para o síndico gerenciar cobranças
     $routes->group('bills', ['filter' => 'group:superadmin'], static function ($routes) {
-        $routes->get('(:segment)', [ReservationsBillsController::class, 'index'], ['as' => 'reservations.bills']);        
-        $routes->post('create', [ReservationsBillsController::class, 'create'], ['as' => 'reservations.bills.create']);            
-        $routes->put('update/(:segment)', [ReservationsBillsController::class, 'update/$1'], ['as' => 'reservations.bills.update']);
+        $routes->get('(:segment)', [ReservationsBillsController::class, 'index/$1'], ['as' => 'reservations.bills']);
+        $routes->post('(:segment)', [ReservationsBillsController::class, 'create/$1'], ['as' => 'reservations.bills.create']);
+        $routes->put('(:segment)', [ReservationsBillsController::class, 'update/$1'], ['as' => 'reservations.bills.update']);
     });
-
+    
+    $routes->post('(:segment)/cancel', [ReservationsController::class, 'cancel/$1'], ['as' => 'reservations.cancel']);
 });
 
 

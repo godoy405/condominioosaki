@@ -8,6 +8,7 @@ use App\Enum\Reservation\Status;
 use App\Entities\Reservation;
 use App\Models\Basic\AppModel;
 use App\Traits\Models\ResidentFilterTrait;
+use App\Models\BillModel;
 
 
 class ReservationModel extends AppModel
@@ -80,19 +81,29 @@ class ReservationModel extends AppModel
 
     protected function relateData(object &$reservation, array $contains = []): void
     {
-        if(in_array('bill', $contains)) {
-           //TODO: buscar a cobrança associada à reserva.
-           //$reservation->bill = $this->billModel->getByCode($reservation->bill_code);
+        if (in_array('bill', $contains)) {
+            try {
+                $billModel = class_exists('App\\Models\\BillModel') ? model('App\\Models\\BillModel', false) : null;
+                if ($billModel && isset($reservation->id)) {
+                    $reservation->bill = $billModel
+                        ->where('reservation_id', $reservation->id)
+                        ->first();
+                } else {
+                    $reservation->bill = null;
+                }
+            } catch (\Throwable $e) {
+                $reservation->bill = null;
+            }
         }
 
-        if(in_array('resident', $contains)) {
-            $reservation->resident = model(ResidentModel::class)
+        if (in_array('resident', $contains)) {
+            $reservation->resident = model('App\\Models\\ResidentModel', false)
                 ->where('id', $reservation->resident_id)
                 ->first();
         }
 
-        if(in_array('area', $contains)) {
-            $reservation->area = model(AreaModel::class)
+        if (in_array('area', $contains)) {
+            $reservation->area = model('App\\Models\\AreaModel', false)
                 ->where('id', $reservation->area_id)
                 ->first();
         }
