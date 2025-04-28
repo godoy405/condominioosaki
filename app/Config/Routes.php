@@ -69,7 +69,7 @@ $routes->group('reservations', static function ($routes) {
         $routes->put('(:segment)', [ReservationsBillsController::class, 'update/$1'], ['as' => 'reservations.bills.update']);
     });
     
-    $routes->post('(:segment)/cancel', [ReservationsController::class, 'cancel/$1'], ['as' => 'reservations.cancel']);
+    $routes->put('(:segment)/cancel', [ReservationsController::class, 'cancel/$1'], ['as' => 'reservations.cancel']);
 });
 
 
