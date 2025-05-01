@@ -8,13 +8,13 @@ class Bill extends Entity
 {
     protected $dates   = ['created_at', 'updated_at', 'due_date'];
     protected $casts   = [
-        'id'             => 'integer',
-        'reservation_id' => 'integer',
-        'resident_id'    => 'integer',
-        'code'           => 'string',
-        'due_date'       => 'date',
-        'status'         => 'string',
-        'amount'         => 'float',
+        'id'             => '?integer',
+        'reservation_id' => '?integer',
+        'resident_id'    => '?integer',
+        'code'           => '?string',
+        'due_date'       => '?date',
+        'status'         => '?string',
+        'amount'         => '?float',
         'created_at'     => 'datetime',
         'updated_at'     => 'datetime',
     ];

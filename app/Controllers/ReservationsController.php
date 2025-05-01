@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Services\Notifier\Email;
+use App\Services\NotifierService;
 use App\Controllers\BaseController;
 use App\Models\ReservationModel;
 use App\Validation\ReservationValidation;
@@ -10,19 +10,19 @@ use App\Helpers\app_helper;
 use CodeIgniter\HTTP\RedirectResponse;
 use App\Entities\Reservation;
 use App\Models\AreaModel;
-use App\Services\Notifier\Email\NotifierService;
 use App\Enum\Reservation\Status;
-
 
 class ReservationsController extends BaseController
 {
-
     private ReservationModel $model;
+    private NotifierService $notifier;
 
     public function __construct()
     {
         $this->model = model(ReservationModel::class);
+        $this->notifier = new NotifierService();
     }
+
     /**
      * @return string
      */
@@ -64,19 +64,23 @@ class ReservationsController extends BaseController
 
         $reservation = new Reservation($this->validator->getValidated());
         $id = $this->model->insert($reservation);
-        $reservation = $this->model->find($id);
+        
+        // Busca a reserva completa com os relacionamentos
+        $reservation = $this->model->select('reservations.*, areas.name as area_name')
+                                 ->join('areas', 'areas.id = reservations.area_id')
+                                 ->asObject(Reservation::class)
+                                 ->find($id);
+
+        // Adiciona o email do usuário autenticado
+        $reservation->resident_email = auth()->user()->email;
 
         try {
-            $syndic = get_syndic();
-            $to = $syndic->email;    
-            $subject = 'Nova reserva';
-            $body = "Nova reserva {$reservation->code} criada com sucesso !";
-            
-            $notifier = new NotifierService();
-            $notifier->send($to, $subject, $body);
-            
-            // Adicionando log para debug
-            log_message('debug', 'Redirecionando para show com código: ' . $reservation->code);
+            // Enviar notificações
+            if (!$this->notifier->sendReservationCreatedNotification($reservation)) {
+                return redirect()->route('reservations.show', [$reservation->code])
+                                ->with('success', 'Reserva criada com sucesso!')
+                                ->with('warning', 'Não foi possível enviar o email de notificação.');
+            }
             
             return redirect()->route('reservations.show', [$reservation->code])
                              ->with('success', 'Reserva criada com sucesso!');
@@ -130,15 +134,14 @@ class ReservationsController extends BaseController
             }
             
             if ($this->model->markAs(code: $reservation->code, status: Status::CANCELED)) {
-                $syndic = get_syndic();
-                $to = $syndic->email;
-                $subject = 'Reserva cancelada';
-                $body = "A reserva {$reservation->code} foi cancelada com sucesso!";
-                
-                try {
-                    (new NotifierService())->send($to, $subject, $body);
-                } catch (\Exception $e) {
-                    log_message('error', '[Reserva] Erro ao enviar email: ' . $e->getMessage());
+                // Adiciona o email do usuário autenticado
+                $reservation->resident_email = auth()->user()->email;
+
+                // Enviar notificações
+                if (!$this->notifier->sendCancellationNotification($reservation, 'Cancelamento solicitado pelo usuário')) {
+                    return redirect()->route('reservations.show', [$reservation->code])
+                                    ->with('success', 'Reserva cancelada com sucesso!')
+                                    ->with('warning', 'Não foi possível enviar o email de notificação.');
                 }
 
                 return redirect()->route('reservations.show', [$reservation->code])

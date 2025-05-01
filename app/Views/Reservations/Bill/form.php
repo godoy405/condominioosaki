@@ -26,11 +26,11 @@ use App\Cells\Bills\FormInputsCell;
                 <?php echo form_open(route_to('reservations.bills.create', $reservation->code)); ?>
 
                 <div class="mb-3">
-                    <strong>Residente:</strong> <?php echo $reservation->resident->name ?? '?' ?>
+                    <strong>Residente:</strong> <?php echo $reservation?->resident?->name ?? '?' ?>
                 </div>
 
                 <div class="mb-3">
-                    <strong>Área:</strong> <?php echo $reservation->area->name ?? '?' ?>
+                    <strong>Área:</strong> <?php echo $reservation?->area?->name ?? '?' ?>
                 </div>
 
                 <?php echo view_cell(library: FormInputsCell::class,params: ['bill' => $reservation?->bill]) ?>
